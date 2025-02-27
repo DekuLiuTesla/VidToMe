@@ -325,8 +325,10 @@ def get_controlnet_kwargs(controlnet, x, cond, t, controlnet_cond, controlnet_sc
     return controlnet_kwargs
 
 
-def get_frame_ids(frame_range, frame_ids=None):
+def get_frame_ids(frame_range, num_frames, frame_ids=None):
     if frame_ids is None:
+        if len(frame_range) > 1 and frame_range[1] == -1:
+            frame_range[1] = num_frames
         frame_ids = list(range(*frame_range))
     frame_ids = sorted(frame_ids)
 
