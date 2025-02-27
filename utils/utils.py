@@ -76,21 +76,17 @@ def seed_everything(seed):
 
 def load_image(image_path):
     image = Image.open(image_path).convert('RGB')
-    image = T.ToTensor()(image)
+    image = T.ToTensor()(image) * 255.0 / 127.0 - 1.0
     return image.unsqueeze(0)
 
 
-def process_frames(frames, h, w):
+def process_frames(frames, h, w, base=64):
 
     fh, fw = frames.shape[-2:]
-    h = int(np.floor(h / 64.0)) * 64
-    w = int(np.floor(w / 64.0)) * 64
-
-    nw = int(fw / fh * h)
-    if nw >= w:
-        size = (h, nw)
-    else:
-        size = (int(fh / fw * w), w)
+    scale_factor = max(w / fw, h / fh)
+    nw = int(round(fw * scale_factor))
+    nh = int(round(fh * scale_factor))
+    size = (nh, nw)
 
     assert len(frames.shape) >= 3
     if len(frames.shape) == 3:
@@ -116,8 +112,7 @@ def glob_frame_paths(video_path):
     return frame_paths
 
 
-def load_video(video_path, h, w, frame_ids=None, device="cuda"):
-    
+def load_video(video_path, h, w, frame_ids=None, device="cuda", base=64):
 
     if ".mp4" in video_path:
         frames, _, _ = read_video(
@@ -141,22 +136,45 @@ def load_video(video_path, h, w, frame_ids=None, device="cuda"):
 
     print(f"[INFO] loaded video with {len(frames)} frames from: {video_path}")
 
-    frames = process_frames(frames, h, w)
+    frames = process_frames(frames, h, w, base)
     return frames.to(device)
 
 
-def save_video(frames: torch.Tensor, path, frame_ids=None, save_frame=False):
+def save_video(frames: torch.Tensor, path, frame_ids=None, save_frame=False, gif=True, post_fix='', fps=30):
     os.makedirs(path, exist_ok=True)
     if frame_ids is None:
         frame_ids = [i for i in range(len(frames))]
     frames = frames[frame_ids]
-
     proc_frames = (rearrange(frames, "T C H W -> T H W C") * 255).to(torch.uint8).cpu()
-    write_video(os.path.join(path, "output.mp4"), proc_frames, fps = 30, video_codec="h264")
-    print(f"[INFO] save video to {os.path.join(path, 'output.mp4')}")
+
+    # create a video writer
+    import cv2
+
+    if not gif:
+        output_video = os.path.join(path, f"output{post_fix}.mp4")
+        fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+        video = cv2.VideoWriter(output_video, fourcc, fps, (proc_frames.shape[2], proc_frames.shape[1]))
+
+        # write images to video
+        for img in proc_frames:
+            video.write(cv2.cvtColor(img.numpy(), cv2.COLOR_RGB2BGR))
+
+        cv2.destroyAllWindows()
+        video.release()
+
+    else:
+        import imageio
+        output_video = os.path.join(path, f"output{post_fix}.gif")
+
+        frames = []
+        for img in proc_frames:
+            frames.append(img.numpy())
+        imageio.mimsave(output_video, frames, 'GIF', fps=fps, loop=0)
+
+    print(f"[INFO] save video to {output_video}")
 
     if save_frame:
-        save_frames(frames, os.path.join(path, "frames"), frame_ids = frame_ids)
+        save_frames(frames, os.path.join(path, f"frames{post_fix}"), frame_ids = frame_ids)
     
 
 def save_frames(frames: torch.Tensor, path, ext="png", frame_ids=None):
@@ -167,6 +185,15 @@ def save_frames(frames: torch.Tensor, path, ext="png", frame_ids=None):
         T.ToPILImage()(frame).save(
             os.path.join(path, '{:04}.{}'.format(i, ext)))
 
+def save_loss_curve(loss_list, output_path, title='Loss Curve'):
+    import matplotlib.pyplot as plt
+    plt.plot(loss_list)
+    plt.xlabel('Iteration')
+    plt.ylabel('Loss')
+    plt.title(title)
+    plt.grid()
+    plt.savefig(os.path.join(output_path, f'{title}.png'))
+    plt.close()
 
 def load_latent(latent_path, t, frame_ids=None):
     latent_fname = f'noisy_latents_{t}.pt'
@@ -273,7 +300,10 @@ def prepare_depth_map(model, image, depth_map=None, batch_size=1, do_classifier_
 
 
 def get_latents_dir(latents_path, model_key):
-    model_key = model_key.split("/")[-1]
+    if model_key is not None:
+        model_key = model_key.split("/")[-1]
+    else:
+        model_key = "default"
     return os.path.join(latents_path, model_key)
 
 

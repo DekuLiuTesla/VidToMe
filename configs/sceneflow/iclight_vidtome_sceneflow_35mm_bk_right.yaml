@@ -1,0 +1,23 @@
+work_dir: "workdir/sceneflow"
+
+data:
+  scene_type: "sceneflow"  # 'sceneflow' or ...
+  height: 512
+  width: 960
+  data_dir: "data/sceneflow"
+  scene_path: "35mm_focallength/scene_backwards/fast"  # to change
+  stereo_sel: "right"  # to change
+
+generation:
+  prompt_upsampler_ckpt: "/data2/yang_liu/Cosmos/checkpoints/Pixtral-12B"
+  negative_prompt: "lowres, bad anatomy, bad hands, cropped, digital rendering, 3D rendering, computer rendering, virtual, worst quality"
+  prompt:
+    35mm_bk_right_natural: "natural light, city, distant sky"  # to change
+
+  # VidToMe args. See details in "src/vidtome/patch.py, apply_patch()"
+  local_merge_ratio: 0.9
+  global_merge_ratio: 0.8
+  frame_range: [0, 300, 1] # start, end, interval. == [0, 32] == [32]
+
+seed: 123
+base_config: plugin/VidToMe/configs/iclight_default.yaml
