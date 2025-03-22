@@ -5,24 +5,21 @@ data:
   height: 512
   width: 960
   data_dir: "data/sceneflow"
-  scene_path: "35mm_focallength/scene_backwards/fast"  # to change
-  stereo_sel: "right"  # to change
-  voxel_size: 0.02
+  scene_path: "35mm_focallength/scene_forwards/fast"  # to change
+  stereo_sel: "left"  # to change
   fps: 15
 
 generation:
   prompt_upsampler_ckpt: "/data2/yang_liu/Cosmos/checkpoints/Pixtral-12B"
   negative_prompt: "lowres, bad anatomy, bad hands, cropped, digital rendering, 3D rendering, computer rendering, virtual, worst quality"
   prompt:
-    35mm_bk_right_natural: "natural light, city, distant sky"  # to change
+    35mm_fw_left_winter_st_pt: "a sunny day in winter, the ground is covered by snow"  # to change
+  prompt_t: "a sunny day in winter, the ground is covered by snow"
 
   # VidToMe args. See details in "src/vidtome/patch.py, apply_patch()"
   local_merge_ratio: 0.9
   global_merge_ratio: 0.8
   frame_range: [0, 300, 1] # start, end, interval. == [0, 32] == [32]
-
-post_opt:
-  apply_opt: True
 
 seed: 123
 base_config: plugin/VidToMe/configs/iclight_default.yaml

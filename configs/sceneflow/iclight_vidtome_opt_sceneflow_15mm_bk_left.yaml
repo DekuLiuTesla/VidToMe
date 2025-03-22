@@ -6,6 +6,7 @@ data:
   width: 960
   data_dir: "data/sceneflow"
   voxel_size: 0.02
+  fps: 15
 
 generation:
   prompt_upsampler_ckpt: "/data2/yang_liu/Cosmos/checkpoints/Pixtral-12B"

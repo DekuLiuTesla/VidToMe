@@ -5,24 +5,25 @@ data:
   height: 512
   width: 960
   data_dir: "data/sceneflow"
-  scene_path: "35mm_focallength/scene_backwards/fast"  # to change
-  stereo_sel: "right"  # to change
-  voxel_size: 0.02
   fps: 15
 
 generation:
   prompt_upsampler_ckpt: "/data2/yang_liu/Cosmos/checkpoints/Pixtral-12B"
   negative_prompt: "lowres, bad anatomy, bad hands, cropped, digital rendering, 3D rendering, computer rendering, virtual, worst quality"
   prompt:
-    35mm_bk_right_natural: "natural light, city, distant sky"  # to change
+    15mm_bk_left_noise_same_corr_1_step10: "street, modern cars, distant woods, and mountains" 
 
   # VidToMe args. See details in "src/vidtome/patch.py, apply_patch()"
   local_merge_ratio: 0.9
   global_merge_ratio: 0.8
   frame_range: [0, 300, 1] # start, end, interval. == [0, 32] == [32]
 
-post_opt:
-  apply_opt: True
+  noise_mode: "same"
+
+  correlate_noise: 
+    apply: True
+    alpha: 0.1
+    step_ratio: 0.1
 
 seed: 123
 base_config: plugin/VidToMe/configs/iclight_default.yaml

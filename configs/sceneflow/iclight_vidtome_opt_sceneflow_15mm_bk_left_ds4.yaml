@@ -5,8 +5,6 @@ data:
   height: 512
   width: 960
   data_dir: "data/sceneflow"
-  scene_path: "35mm_focallength/scene_backwards/fast"  # to change
-  stereo_sel: "right"  # to change
   voxel_size: 0.02
   fps: 15
 
@@ -14,11 +12,12 @@ generation:
   prompt_upsampler_ckpt: "/data2/yang_liu/Cosmos/checkpoints/Pixtral-12B"
   negative_prompt: "lowres, bad anatomy, bad hands, cropped, digital rendering, 3D rendering, computer rendering, virtual, worst quality"
   prompt:
-    35mm_bk_right_natural: "natural light, city, distant sky"  # to change
+    15mm_bk_left_ds4: "street, modern cars, distant woods, and mountains" 
 
   # VidToMe args. See details in "src/vidtome/patch.py, apply_patch()"
   local_merge_ratio: 0.9
   global_merge_ratio: 0.8
+  max_downsample: 4
   frame_range: [0, 300, 1] # start, end, interval. == [0, 32] == [32]
 
 post_opt:

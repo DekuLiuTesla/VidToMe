@@ -48,7 +48,13 @@ generation:
   global_merge_ratio: 0.8
   global_rand: 0.5
   align_batch: True
-  vox_ratio: 0.0
+  max_downsample: 2
+  noise_mode: "vanilla"
+  win_size_t: 512
+  alpha_t: 0.2
+  final_factor_t: 0.01
+  prompt_t: "best quality"
+  negative_prompt_t: "jittery"
 
   frame_range: [0, 32, 1] # start, end, interval. == [0, 32] == [32]
   frame_ids: null # Specify frame indexes to edit. It will override frame_range.
@@ -71,6 +77,7 @@ post_opt:
   lambda_dssim: 0.2
   lambda_perceptual: 0.01
   lambda_flow: 0.8
+  lambda_tv: 0.05
   lambda_exp: 0.8
   feature_lr: 0.05
   exposure_lr_init: 0.01
