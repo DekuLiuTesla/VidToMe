@@ -1,4 +1,4 @@
-sd_version: "1.5" # In ['2.1', '2.0', '1.5', 'depth']
+sd_version: "iclight" # In ['2.1', '2.0', '1.5', 'depth', 'iclight']
 model_key: null # Specify model key. If set, ignore sd_version.
 input_path: "path/to/video" # Accept .mp4, .gif file or a folder with png/jpg sequence
 work_dir: "workdir"
@@ -10,9 +10,9 @@ inversion:
   save_path: "${work_dir}/latents"
   prompt: "xxxx"
   n_frames: null # null for inverting all frames
-  steps: 50 # Inversion steps
+  steps: 25 # Inversion steps
   save_intermediate: False # Save intermediate latents. Required when using PnP.
-  save_steps: 50
+  save_steps: 25
   use_blip: False # Use prompt created by BLIP.
   recon: False # Reconstruct the input video from inverted latents.
   control: "none" # Apply ControlNet in inversion. Choices ['tile', 'softedge', 'depth', 'canny', 'none']
@@ -24,7 +24,13 @@ inversion:
 generation:
   control: "none" # Apply which control in generation. 
   
-  # 'none' (No control when using sd2-depth model)
+  # Choices:
+  # 'pnp' (Plug-and-Play), args:
+  pnp_attn_t: 0.5
+  pnp_f_t: 0.8
+
+  # ['tile', 'softedge', 'depth', 'canny'] (Controlnet), args:
+  control_scale: 1.0
 
   # Sample args:
   guidance_scale: 2.0 # CFG scale
@@ -49,7 +55,7 @@ generation:
   global_rand: 0.5
   align_batch: True
   max_downsample: 2
-  noise_mode: "vanilla"
+  noise_mode: "same"
   win_size_t: 512
   alpha_t: 0.2
   final_factor_t: 0.01

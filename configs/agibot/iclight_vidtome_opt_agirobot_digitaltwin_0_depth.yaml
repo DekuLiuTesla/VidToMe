@@ -1,0 +1,33 @@
+sd_version: "depth" # In ['2.1', '2.0', '1.5', 'depth', 'iclight']
+work_dir: "workdir/agibot_digital"
+
+data:
+  scene_type: "video"  # 'sceneflow' or 'video'
+  height: 480
+  width: 640
+  rgb_path: "data/agibot_digital/observations/digitaltwin_0/0d960aec-079c-4827-9836-72fa5c8e6c9a/video/head.mp4"
+  fps: 15
+
+inversion:
+  prompt: "at home, living room, robotic arm"
+
+generation:
+  prompt_upsampler_ckpt: "/data2/yang_liu/Cosmos/checkpoints/Pixtral-12B"
+  negative_prompt: "machine, lowres, bad anatomy, bad hands, cropped, digital rendering, 3D rendering, computer rendering, virtual, worst quality"
+  prompt:
+    # agibot_digitaltwin_0_upsampled: null
+    agibot_digitaltwin_0_depth: "at home, living room, robotic arm, white table. The scene is well-lit by sunshine, highlighting the clean and organized workspace." 
+
+  # VidToMe args. See details in "src/vidtome/patch.py, apply_patch()"
+  local_merge_ratio: 0.9
+  global_merge_ratio: 0.8
+  alpha_t: 0.0
+  frame_range: [0, 60, 2]
+
+  guidance_scale: 7.5 # CFG scale
+
+post_opt:
+  apply_opt: True
+
+seed: 123
+base_config: plugin/VidToMe/configs/iclight_default.yaml
