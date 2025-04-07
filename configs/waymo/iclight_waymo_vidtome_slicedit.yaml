@@ -1,0 +1,4 @@
+generation:
+  alpha_t: 0.05
+
+base_config: plugin/VidToMe/configs/waymo/iclight_waymo_vidtome.yaml

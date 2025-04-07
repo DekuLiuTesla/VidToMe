@@ -1,0 +1,8 @@
+data:
+  rgb_path: "data/waymo/kitti_format/training/image_0/253"
+
+generation:
+  prompt:
+    waymo_253: 
+
+base_config: plugin/VidToMe/configs/waymo/iclight_waymo_vidtome.yaml

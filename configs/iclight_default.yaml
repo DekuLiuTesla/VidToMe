@@ -42,7 +42,7 @@ generation:
     # object: "xxx"
     # background: "xxx"
 
-  latents_path: "${work_dir}/latents"
+  latents_path: "${inversion.save_path}"
   output_path: "${work_dir}"
 
   chunk_size: 4 # Number of frames in a video chunk
@@ -56,7 +56,7 @@ generation:
   align_batch: True
   max_downsample: 2
   noise_mode: "same"
-  win_size_t: 512
+  win_size_t: 64
   alpha_t: 0.2
   final_factor_t: 0.01
   prompt_t: "best quality"
