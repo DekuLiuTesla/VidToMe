@@ -1,0 +1,8 @@
+data:
+  rgb_path: "data/droid_raw/Sat_Dec__2_15:38:00_2023/recordings/MP4/32907025.mp4"
+
+generation:
+  prompt:
+    Sat_Dec__2_15:38:00_2023: 
+
+base_config: plugin/VidToMe/configs/droid/iclight_droid_vidtome.yaml

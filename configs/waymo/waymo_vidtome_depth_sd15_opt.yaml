@@ -1,4 +1,5 @@
-work_dir: "workdir/waymo/iclight_vidtome"
+sd_version: "1.5" # In ['2.1', '2.0', '1.5', 'depth', 'iclight']
+work_dir: "workdir/waymo/depth-sd15_vidtome_opt"
 
 data:
   scene_type: "video"  # 'sceneflow' or 'video'
@@ -6,7 +7,14 @@ data:
   width: 960
   fps: 15
 
+inversion:
+  save_path: "${work_dir}/latents"
+  force: True
+
 generation:
+  control: "depth"
+  control_scale: 1.0
+  
   prompt_upsampler_ckpt: "/data2/yang_liu/Cosmos/checkpoints/Pixtral-12B"
   negative_prompt: "lowres, bad anatomy, bad hands, cropped, digital rendering, 3D rendering, computer rendering, virtual, worst quality, reflective"
 
@@ -16,6 +24,11 @@ generation:
   frame_range: [0, -1, 1]
 
   alpha_t: 0.0
+
+  guidance_scale: 7.5 # CFG scale
+
+post_opt:
+  apply_opt: True
 
 seed: 123
 base_config: plugin/VidToMe/configs/iclight_default.yaml

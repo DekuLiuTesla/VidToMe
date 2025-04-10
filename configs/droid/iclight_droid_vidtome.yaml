@@ -1,19 +1,18 @@
-work_dir: "workdir/waymo/iclight_vidtome"
+work_dir: "workdir/droid/iclight_vidtome"
 
 data:
   scene_type: "video"  # 'sceneflow' or 'video'
-  height: 640
-  width: 960
-  fps: 15
+  height: 360
+  width: 640
 
 generation:
   prompt_upsampler_ckpt: "/data2/yang_liu/Cosmos/checkpoints/Pixtral-12B"
   negative_prompt: "lowres, bad anatomy, bad hands, cropped, digital rendering, 3D rendering, computer rendering, virtual, worst quality, reflective"
 
   # VidToMe args. See details in "src/vidtome/patch.py, apply_patch()"
-  local_merge_ratio: 0.6
-  global_merge_ratio: 0.5
-  frame_range: [0, -1, 1]
+  local_merge_ratio: 0.9
+  global_merge_ratio: 0.8
+  frame_range: [0, 60, 2]
 
   alpha_t: 0.0
 

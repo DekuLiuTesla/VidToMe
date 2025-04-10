@@ -1,6 +1,9 @@
 data:
   rgb_path: "data/waymo/kitti_format/training/image_0/642"
 
+inversion:
+  save_path: "${work_dir}/642/latents"
+
 generation:
   prompt:
     # waymo_642: A city street at dusk, bathed in the soft glow of streetlights and building lights. The sky is a gradient of twilight, indicating the transition from day to night.
