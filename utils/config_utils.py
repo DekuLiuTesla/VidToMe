@@ -7,12 +7,17 @@ def load_config(print_config = True):
     parser.add_argument('--config', type=str,
                         default='configs/tea-pour.yaml',
                         help="Config file path")
+    parser.add_argument('--base_config', type=str,
+                        default=None,
+                        help="Base config file path to override")
     args = parser.parse_args()
     config = OmegaConf.load(args.config)
 
     # Recursively merge base configs
     cur_config_path = args.config
     cur_config = config
+    if args.base_config is not None:
+        cur_config.base_config = args.base_config
     while "base_config" in cur_config and cur_config.base_config != cur_config_path:
         base_config = OmegaConf.load(cur_config.base_config)
         config = OmegaConf.merge(base_config, config)

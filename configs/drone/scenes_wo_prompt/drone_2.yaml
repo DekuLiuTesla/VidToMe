@@ -1,0 +1,8 @@
+data:
+  rgb_path: "data/drone/drone_2"
+
+generation:
+  prompt:
+    data/drone/drone_2: 
+
+base_config: plugin/VidToMe/configs/drone/iclight_drone_vidtome.yaml

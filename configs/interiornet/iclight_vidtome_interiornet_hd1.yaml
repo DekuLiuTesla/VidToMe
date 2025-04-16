@@ -1,20 +1,27 @@
-work_dir: "workdir/droid/iclight_vidtome"
+work_dir: "workdir/interiornet"
 
 data:
-  scene_type: "video"  # 'sceneflow' or 'video'
-  height: 536
-  width: 960
+  scene_type: "interiornet"  # 'sceneflow' or 'robotrix' or 'video'
+  height: 480
+  width: 640
+  data_dir: "data/interiornet/HD1/3FO4K35GPEA7"
+  traj: 7
+  voxel_size: 0.02
+  fps: 15
 
 generation:
   prompt_upsampler_ckpt: "/data2/yang_liu/Cosmos/checkpoints/Pixtral-12B"
   negative_prompt: "lowres, bad anatomy, bad hands, cropped, digital rendering, 3D rendering, computer rendering, virtual, worst quality"
+  prompt:
+    000_hamburghaus_000_scifi: "modern living room, warm atmosphere"
 
   # VidToMe args. See details in "src/vidtome/patch.py, apply_patch()"
   local_merge_ratio: 0.9
   global_merge_ratio: 0.8
-  frame_range: [0, 600, 2]
+  frame_range: [0, 200, 1] # start, end, interval. == [0, 32] == [32]
 
-  alpha_t: 0.0
+post_opt:
+  apply_opt: True
 
 seed: 123
 base_config: plugin/VidToMe/configs/iclight_default.yaml

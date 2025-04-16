@@ -1,9 +1,10 @@
-work_dir: "workdir/droid/iclight_vidtome"
+work_dir: "workdir/carla/iclight_vidtome"
 
 data:
-  scene_type: "video"  # 'sceneflow' or 'video'
+  scene_type: "carla"  # 'sceneflow' or ...
   height: 536
   width: 960
+  fps: 15
 
 generation:
   prompt_upsampler_ckpt: "/data2/yang_liu/Cosmos/checkpoints/Pixtral-12B"
@@ -12,7 +13,7 @@ generation:
   # VidToMe args. See details in "src/vidtome/patch.py, apply_patch()"
   local_merge_ratio: 0.9
   global_merge_ratio: 0.8
-  frame_range: [0, 600, 2]
+  frame_range: [0, 300, 1] # start, end, interval. == [0, 32] == [32]
 
   alpha_t: 0.0
 

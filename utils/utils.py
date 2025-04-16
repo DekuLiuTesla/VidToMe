@@ -13,7 +13,7 @@ from diffusers import DDIMScheduler, StableDiffusionControlNetPipeline, StableDi
 from .controlnet_utils import CONTROLNET_DICT, control_preprocess
 from einops import rearrange
 
-FRAME_EXT = [".jpg", ".png"]
+FRAME_EXT = [".jpg", ".png", ".JPG", ".PNG"]
 
 
 def init_model(device="cuda", sd_version="1.5", model_key=None, control_type="none", weight_dtype="fp16"):
@@ -118,6 +118,10 @@ def load_video(video_path, h, w, frame_ids=None, device="cuda", base=64):
         frames, _, _ = read_video(
             video_path, output_format="TCHW", pts_unit="sec")
         frames = frames / 255
+    elif ".avi" in video_path:
+        frames, _, _ = read_video(
+            video_path, output_format="TCHW", pts_unit="sec")
+        frames = frames / 255
     elif ".gif" in video_path:
         frames = Image.open(video_path)
         frame_ls = []
@@ -151,16 +155,14 @@ def save_video(frames: torch.Tensor, path, frame_ids=None, save_frame=False, gif
     import cv2
 
     if not gif:
+        from torchvision.io import write_video
+        video_codec = "libx264"
+        video_options = {
+            "crf": "23",  
+            "preset": "medium", 
+        }
         output_video = os.path.join(path, f"output{post_fix}.mp4")
-        fourcc = cv2.VideoWriter_fourcc(*"mp4v")
-        video = cv2.VideoWriter(output_video, fourcc, fps, (proc_frames.shape[2], proc_frames.shape[1]))
-
-        # write images to video
-        for img in proc_frames:
-            video.write(cv2.cvtColor(img.numpy(), cv2.COLOR_RGB2BGR))
-
-        cv2.destroyAllWindows()
-        video.release()
+        write_video(output_video, proc_frames, fps=fps, video_codec=video_codec, options=video_options)
 
     else:
         import imageio
@@ -328,6 +330,9 @@ def get_controlnet_kwargs(controlnet, x, cond, t, controlnet_cond, controlnet_sc
 def get_frame_ids(frame_range, num_frames, frame_ids=None):
     if frame_ids is None:
         if len(frame_range) > 1 and frame_range[1] == -1:
+            frame_range[1] = num_frames
+        if frame_range[1] > num_frames:
+            print(f"[WARNING] end frame {frame_range[1]} has been adjusted to number of frames {num_frames}.")
             frame_range[1] = num_frames
         frame_ids = list(range(*frame_range))
     frame_ids = sorted(frame_ids)
