@@ -3,6 +3,6 @@ data:
 
 generation:
   prompt:
-    drone_4: 
+    drone_4: The atmosphere is overcast, contributing to the overall gloomy weather.
 
 base_config: plugin/VidToMe/configs/drone/iclight_drone_vidtome.yaml

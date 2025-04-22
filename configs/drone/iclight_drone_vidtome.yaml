@@ -2,9 +2,9 @@ work_dir: "workdir/drone/iclight_vidtome"
 
 data:
   scene_type: "video"  # 'sceneflow' or 'video'
-  height: 536  # should be divisible by 8
-  width: 960  # should be divisible by 8
-  fps: 15
+  height: 720  # should be divisible by 8
+  width: 1280  # should be divisible by 8
+  fps: 30
 
 generation:
   prompt_upsampler_ckpt: "/data2/yang_liu/Cosmos/checkpoints/Pixtral-12B"

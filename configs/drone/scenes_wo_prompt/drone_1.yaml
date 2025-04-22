@@ -3,6 +3,6 @@ data:
 
 generation:
   prompt:
-    data/drone/drone_1: 
+    drone_1: 
 
 base_config: plugin/VidToMe/configs/drone/iclight_drone_vidtome.yaml
